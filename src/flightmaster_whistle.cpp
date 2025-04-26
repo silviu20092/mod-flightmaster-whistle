@@ -65,7 +65,37 @@ void FlightmasterWhistle::LoadFlightmasters()
     LOG_INFO("server.loading", " ");
 }
 
-bool FlightmasterWhistle::TeleportToNearestFlightmaster(Player* player) const
+void FlightmasterWhistle::TeleportToNearestFlightmaster(Player* player) const
+{
+    uint32 currentTime = getMSTime();
+    uint32 lastTime = timerMap[player->GetGUID().GetCounter()];
+    uint32 diff = getMSTimeDiff(lastTime, currentTime);
+
+    if (lastTime > 0 && diff < GetTimer() && !player->IsGameMaster())
+    {
+        SendPlayerMessage(player, "Please try again in " + FlightmasterWhistle::FormatTimer(GetTimer() - diff) + ".");
+        return;
+    }
+
+    if (HandleTeleport(player))
+        timerMap[player->GetGUID().GetCounter()] = currentTime;
+}
+
+/*static*/ std::unordered_map<uint32, uint32> FlightmasterWhistle::timerMap;
+
+/*static*/ void FlightmasterWhistle::SendPlayerMessage(const Player* player, const std::string& message)
+{
+    ChatHandler handler(player->GetSession());
+    handler.SendSysMessage(message);
+}
+
+/*static*/ std::string FlightmasterWhistle::FormatTimer(const uint32 ms)
+{
+    std::chrono::hh_mm_ss time{ std::chrono::milliseconds(ms) };
+    return Acore::ToString(time.minutes().count()) + " minutes and " + Acore::ToString(time.seconds().count()) + " seconds";
+}
+
+bool FlightmasterWhistle::HandleTeleport(Player* player) const
 {
     if (player == nullptr || !player->IsInWorld())
         return false;
@@ -117,18 +147,6 @@ bool FlightmasterWhistle::TeleportToNearestFlightmaster(Player* player) const
 
     player->TeleportTo(nearestFm->pos);
     return true;
-}
-
-/*static*/ void FlightmasterWhistle::SendPlayerMessage(const Player* player, const std::string& message)
-{
-    ChatHandler handler(player->GetSession());
-    handler.SendSysMessage(message);
-}
-
-/*static*/ std::string FlightmasterWhistle::FormatTimer(const uint32 ms)
-{
-    std::chrono::hh_mm_ss time{ std::chrono::milliseconds(ms) };
-    return Acore::ToString(time.minutes().count()) + " minutes and " + Acore::ToString(time.seconds().count()) + " seconds";
 }
 
 const FlightmasterWhistle::CreatureSpawnInfo* FlightmasterWhistle::ChooseNearestSpawnInfo(const Player* player) const
