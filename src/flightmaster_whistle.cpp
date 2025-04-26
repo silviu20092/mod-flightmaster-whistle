@@ -16,6 +16,7 @@ FlightmasterWhistle::FlightmasterWhistle()
 {
     enabled = true;
     timer = 900;
+    preserveZone = true;
 }
 
 FlightmasterWhistle::~FlightmasterWhistle()
@@ -76,6 +77,8 @@ void FlightmasterWhistle::TeleportToNearestFlightmaster(Player* player) const
         SendPlayerMessage(player, "Please try again in " + FlightmasterWhistle::FormatTimer(GetTimer() - diff) + ".");
         return;
     }
+
+    SendPlayerMessage(player, "Teleporting to nearest flightmaster...");
 
     if (HandleTeleport(player))
         timerMap[player->GetGUID().GetCounter()] = currentTime;
@@ -161,8 +164,7 @@ const FlightmasterWhistle::CreatureSpawnInfo* FlightmasterWhistle::ChooseNearest
         const CreatureSpawnInfo* current = &*citer;
         if (current->pos.GetMapId() == map->GetId())
         {
-            uint32 fmZone = sMapMgr->GetZoneId(PHASEMASK_NORMAL, current->pos);
-            if (fmZone == player->GetZoneId())
+            if (!GetPreserveZone() || sMapMgr->GetZoneId(PHASEMASK_NORMAL, current->pos) == player->GetZoneId())
             {
                 float dist = player->GetWorldLocation().GetExactDist(current->pos);
                 if (dist < minDist)
@@ -215,4 +217,14 @@ void FlightmasterWhistle::SetTimer(int32 timer)
 uint32 FlightmasterWhistle::GetTimer() const
 {
     return timer;
+}
+
+void FlightmasterWhistle::SetPreserveZone(bool preserveZone)
+{
+    this->preserveZone = preserveZone;
+}
+
+bool FlightmasterWhistle::GetPreserveZone() const
+{
+    return preserveZone;
 }

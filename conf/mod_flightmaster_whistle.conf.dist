@@ -24,3 +24,13 @@ Flightmaster.Whistle.Enable = 1
 
 Flightmaster.Whistle.Timer = 900
 
+#
+#    Flightmaster.Whistle.Preserve.Zone
+#        Description: If 1, the nearest flightmaster is always searched in the same zone as the player's. For example, if the
+#                     player is in Barrens, the nearest flightmaster is searched only in Barrens. If 0, the nearest flightmaster
+#                     is searched globally (still limited to continent though). So this means that if the player is in northern
+#                     Barrens, the nearest flightmaster will be found in Ashenvale.
+#        Default: 1 - zone is preserved when searching
+#
+
+Flightmaster.Whistle.Preserve.Zone = 1

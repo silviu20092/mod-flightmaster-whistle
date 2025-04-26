@@ -21,6 +21,7 @@ public:
     {
         sFlightmasterWhistle->SetEnabled(sConfigMgr->GetOption<bool>("Flightmaster.Whistle.Enable", true));
         sFlightmasterWhistle->SetTimer(sConfigMgr->GetOption<int32>("Flightmaster.Whistle.Timer", 900));
+        sFlightmasterWhistle->SetPreserveZone(sConfigMgr->GetOption<bool>("Flightmaster.Whistle.Preserve.Zone", true));
     }
 
     void OnBeforeWorldInitialized() override

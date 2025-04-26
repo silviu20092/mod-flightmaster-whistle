@@ -30,10 +30,13 @@ public:
 	bool GetEnabled() const;
 	void SetTimer(int32 timer);
 	uint32 GetTimer() const;
+    void SetPreserveZone(bool preserveZone);
+    bool GetPreserveZone() const;
 private:
 	CreatureSpawnInfoContainer flightmasters;
 	bool enabled;
 	uint32 timer;
+    bool preserveZone;
 
     static std::unordered_map<uint32, uint32> timerMap;
 
