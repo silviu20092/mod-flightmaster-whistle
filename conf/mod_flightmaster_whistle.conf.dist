@@ -1,0 +1,26 @@
+#
+# Credits: silviu20092
+#
+
+[worldserver]
+
+########################################
+# Mod Flightmaster Whistle configuration
+########################################
+#
+#    Flightmaster.Whistle.Enable
+#        Description: Enable/disable the module
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#
+
+Flightmaster.Whistle.Enable = 1
+
+#
+#    Flightmaster.Whistle.Timer
+#        Description: Players will be able to teleport to nearest flight master every Flightmaster.Whistle.Timer seconds
+#        Default: 900 - can use the command once every 15 minutes
+#
+
+Flightmaster.Whistle.Timer = 900
+
