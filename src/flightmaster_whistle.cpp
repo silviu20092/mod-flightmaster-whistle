@@ -67,7 +67,12 @@ void FlightmasterWhistle::LoadFlightmasters()
     } while (result->NextRow());
 
     LOG_INFO("server.loading", ">> Loaded {} flightmasters in {} ms", flightmasters.size(), GetMSTimeDiffToNow(oldMSTime));
-    LOG_INFO("server.loading", " ");
+
+    if (!sWorld->getBoolConfig(CONFIG_PRELOAD_ALL_NON_INSTANCED_MAP_GRIDS))
+    {
+        LOG_INFO("server.loading", ">> Preloading grids near flightmasters...");
+        PreloadGrids();
+    }
 }
 
 void FlightmasterWhistle::TeleportToNearestFlightmaster(Player* player) const
@@ -186,7 +191,6 @@ const FlightmasterWhistle::CreatureSpawnInfo* FlightmasterWhistle::ChooseNearest
                 float dist = player->GetWorldLocation().GetExactDist(current->pos);
                 if (dist < minDist)
                 {
-                    map->LoadGridsInRange(current->pos, 50.0f);
                     Creature* creature = ObjectAccessor::GetSpawnedCreatureByDBGUID(map->GetId(), current->guid);
                     if (creature != nullptr && creature->GetReactionTo(player) > REP_UNFRIENDLY && player->CanSeeOrDetect(creature))
                     {
@@ -223,11 +227,24 @@ void FlightmasterWhistle::CreateLinkedZones()
     linkedZones[1537] = 1;          // Ironforge -> Dun Morogh
     linkedZones[1657] = 141;        // Darnassus -> Teldrassil
     linkedZones[3557] = 3524;       // Exodar -> Azuremyst Isle
+    linkedZones[4395] = 2817;       // Dalaran -> Crystalsong Forest
 }
 
 bool FlightmasterWhistle::IsInLinkedZone(uint32 zone, const Player* player) const
 {
     return GetLinkMainCities() && linkedZones.find(zone) != linkedZones.end() && linkedZones.at(zone) == player->GetZoneId();
+}
+
+void FlightmasterWhistle::PreloadGrids()
+{
+    CreatureSpawnInfoContainer::const_iterator citer = flightmasters.begin();
+    while (citer != flightmasters.end())
+    {
+        const CreatureSpawnInfo* current = &*citer;
+        Map* map = sMapMgr->CreateBaseMap(current->pos.GetMapId());
+        map->LoadGridsInRange(current->pos, GRID_RADIUS);
+        citer++;
+    }
 }
 
 void FlightmasterWhistle::SetEnabled(bool enabled)

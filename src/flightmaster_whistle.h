@@ -52,6 +52,9 @@ private:
 	bool EnemiesNearby(const Player* player, float range = 50.0f) const;
     void CreateLinkedZones();
     bool IsInLinkedZone(uint32 zone, const Player* player) const;
+    void PreloadGrids();
+
+    static constexpr float GRID_RADIUS = 50.0f;
 
     static void SendPlayerMessage(const Player* player, const std::string& message);
     static std::string FormatTimer(const uint32 ms);
