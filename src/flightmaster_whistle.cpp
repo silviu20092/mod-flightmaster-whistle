@@ -17,6 +17,10 @@ FlightmasterWhistle::FlightmasterWhistle()
     enabled = true;
     timer = 900;
     preserveZone = true;
+    linkMainCities = false;
+    minPlayerLevel = 1;
+
+    CreateLinkedZones();
 }
 
 FlightmasterWhistle::~FlightmasterWhistle()
@@ -109,6 +113,12 @@ bool FlightmasterWhistle::HandleTeleport(Player* player) const
         return false;
     }
 
+    if (player->GetLevel() < GetMinPlayerLevel())
+    {
+        SendPlayerMessage(player, "You need to be at least level " + Acore::ToString(GetMinPlayerLevel()) + " to use this.");
+        return false;
+    }
+
     if (!player->IsAlive())
     {
         SendPlayerMessage(player, "Can't do this while dead.");
@@ -164,14 +174,21 @@ const FlightmasterWhistle::CreatureSpawnInfo* FlightmasterWhistle::ChooseNearest
         const CreatureSpawnInfo* current = &*citer;
         if (current->pos.GetMapId() == map->GetId())
         {
-            if (!GetPreserveZone() || sMapMgr->GetZoneId(PHASEMASK_NORMAL, current->pos) == player->GetZoneId())
+            bool search = !GetPreserveZone();
+            if (!search)
+            {
+                uint32 fmZone = sMapMgr->GetZoneId(PHASEMASK_NORMAL, current->pos);
+                search = fmZone == player->GetZoneId() || IsInLinkedZone(fmZone, player);
+            }
+
+            if (search)
             {
                 float dist = player->GetWorldLocation().GetExactDist(current->pos);
                 if (dist < minDist)
                 {
                     map->LoadGridsInRange(current->pos, 50.0f);
                     Creature* creature = ObjectAccessor::GetSpawnedCreatureByDBGUID(map->GetId(), current->guid);
-                    if (creature != nullptr && creature->GetReactionTo(player) > REP_UNFRIENDLY)
+                    if (creature != nullptr && creature->GetReactionTo(player) > REP_UNFRIENDLY && player->CanSeeOrDetect(creature))
                     {
                         minDist = dist;
                         nearest = current;
@@ -194,6 +211,23 @@ bool FlightmasterWhistle::EnemiesNearby(const Player* player, float range) const
     Cell::VisitAllObjects(player, searcher, range);
 
     return !targets.empty();
+}
+
+void FlightmasterWhistle::CreateLinkedZones()
+{
+    linkedZones[1637] = 14;         // Orgrimmar -> Durotar
+    linkedZones[1638] = 215;        // Thunderbluff -> Mulgore
+    linkedZones[1497] = 85;         // Undercity -> Tirisfal Glades
+    linkedZones[3487] = 3430;       // Silvermoon City -> Eversong Woods (FM is in Eversong Woods anyway, just a placeholder)
+    linkedZones[1519] = 12;         // Stormwind City -> Elwynn Forest
+    linkedZones[1537] = 1;          // Ironforge -> Dun Morogh
+    linkedZones[1657] = 141;        // Darnassus -> Teldrassil
+    linkedZones[3557] = 3524;       // Exodar -> Azuremyst Isle
+}
+
+bool FlightmasterWhistle::IsInLinkedZone(uint32 zone, const Player* player) const
+{
+    return GetLinkMainCities() && linkedZones.find(zone) != linkedZones.end() && linkedZones.at(zone) == player->GetZoneId();
 }
 
 void FlightmasterWhistle::SetEnabled(bool enabled)
@@ -227,4 +261,27 @@ void FlightmasterWhistle::SetPreserveZone(bool preserveZone)
 bool FlightmasterWhistle::GetPreserveZone() const
 {
     return preserveZone;
+}
+
+void FlightmasterWhistle::SetLinkMainCities(bool linkMainCities)
+{
+    this->linkMainCities = linkMainCities;
+}
+
+bool FlightmasterWhistle::GetLinkMainCities() const
+{
+    return linkMainCities;
+}
+
+void FlightmasterWhistle::SetMinPlayerLevel(int32 level)
+{
+    if (level < 1 || level > STRONG_MAX_LEVEL)
+        level = 1;
+
+    this->minPlayerLevel = (uint8)level;
+}
+
+uint8 FlightmasterWhistle::GetMinPlayerLevel() const
+{
+    return minPlayerLevel;
 }

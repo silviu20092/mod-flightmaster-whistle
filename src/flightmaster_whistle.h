@@ -32,17 +32,26 @@ public:
 	uint32 GetTimer() const;
     void SetPreserveZone(bool preserveZone);
     bool GetPreserveZone() const;
+    void SetLinkMainCities(bool linkMainCities);
+    bool GetLinkMainCities() const;
+    void SetMinPlayerLevel(int32 level);
+    uint8 GetMinPlayerLevel() const;
 private:
 	CreatureSpawnInfoContainer flightmasters;
 	bool enabled;
 	uint32 timer;
     bool preserveZone;
+    std::unordered_map<uint32, uint32> linkedZones;
+    bool linkMainCities;
+    uint8 minPlayerLevel;
 
     static std::unordered_map<uint32, uint32> timerMap;
 
     bool HandleTeleport(Player* player) const;
 	const CreatureSpawnInfo* ChooseNearestSpawnInfo(const Player* player) const;
 	bool EnemiesNearby(const Player* player, float range = 50.0f) const;
+    void CreateLinkedZones();
+    bool IsInLinkedZone(uint32 zone, const Player* player) const;
 
     static void SendPlayerMessage(const Player* player, const std::string& message);
     static std::string FormatTimer(const uint32 ms);

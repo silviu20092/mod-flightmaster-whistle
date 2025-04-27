@@ -34,3 +34,21 @@ Flightmaster.Whistle.Timer = 900
 #
 
 Flightmaster.Whistle.Preserve.Zone = 1
+
+#
+#    Flightmaster.Whistle.LinkMainCities
+#        Description: Link main cities to their respective zones (ex. Orgrimmar to Durotar). If this is 1, then players in Durotar
+#                     can be teleported to the flight master in Orgrimmar.
+#        Default: 0
+#
+
+Flightmaster.Whistle.LinkMainCities = 0
+
+#
+#    Flightmaster.Whistle.MinPlayerLevel
+#        Description: Minimum player level required to use the Flightmaster Whistle
+#        Default: 1
+#
+
+Flightmaster.Whistle.MinPlayerLevel = 1
+
