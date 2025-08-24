@@ -212,7 +212,7 @@ bool FlightmasterWhistle::EnemiesNearby(const Player* player, float range) const
     std::list<Player*> targets;
     Acore::AnyUnfriendlyUnitInObjectRangeCheck u_check(player, player, range);
     Acore::PlayerListSearcher<Acore::AnyUnfriendlyUnitInObjectRangeCheck> searcher(player, targets, u_check);
-    Cell::VisitAllObjects(player, searcher, range);
+    Cell::VisitObjects(player, searcher, range);
 
     return !targets.empty();
 }
