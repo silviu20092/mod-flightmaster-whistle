@@ -17,7 +17,7 @@ public:
     {
     }
 
-    void OnAfterConfigLoad(bool reload) override
+    void OnAfterConfigLoad(bool /*reload*/) override
     {
         sFlightmasterWhistle->SetEnabled(sConfigMgr->GetOption<bool>("Flightmaster.Whistle.Enable", true));
         sFlightmasterWhistle->SetTimer(sConfigMgr->GetOption<int32>("Flightmaster.Whistle.Timer", 900));
