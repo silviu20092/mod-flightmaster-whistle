@@ -24,6 +24,7 @@ public:
         sFlightmasterWhistle->SetPreserveZone(sConfigMgr->GetOption<bool>("Flightmaster.Whistle.Preserve.Zone", true));
         sFlightmasterWhistle->SetLinkMainCities(sConfigMgr->GetOption<bool>("Flightmaster.Whistle.LinkMainCities", false));
         sFlightmasterWhistle->SetMinPlayerLevel(sConfigMgr->GetOption<int32>("Flightmaster.Whistle.MinPlayerLevel", 1));
+        sFlightmasterWhistle->SetOnlyKnown(sConfigMgr->GetOption<bool>("Flightmaster.Whistle.OnlyKnown", true));
     }
 
     void OnBeforeWorldInitialized() override

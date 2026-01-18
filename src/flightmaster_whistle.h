@@ -36,6 +36,8 @@ public:
     bool GetLinkMainCities() const;
     void SetMinPlayerLevel(int32 level);
     uint8 GetMinPlayerLevel() const;
+    void SetOnlyKnown(bool onlyKnown);
+    bool GetOnlyKnown() const;
 private:
 	CreatureSpawnInfoContainer flightmasters;
 	bool enabled;
@@ -44,10 +46,12 @@ private:
     std::unordered_map<uint32, uint32> linkedZones;
     bool linkMainCities;
     uint8 minPlayerLevel;
+    bool onlyKnown;
 
     static std::unordered_map<uint32, uint32> timerMap;
 
     bool HandleTeleport(Player* player) const;
+    bool IsValidFlightmaster(const Player* player, const Creature* creature) const;
 	const CreatureSpawnInfo* ChooseNearestSpawnInfo(const Player* player) const;
 	bool EnemiesNearby(const Player* player, float range = 50.0f) const;
     void CreateLinkedZones();

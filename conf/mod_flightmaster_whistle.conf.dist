@@ -52,3 +52,10 @@ Flightmaster.Whistle.LinkMainCities = 0
 
 Flightmaster.Whistle.MinPlayerLevel = 1
 
+#
+#    Flightmaster.Whistle.OnlyKnown
+#        Description: Choose only known flightmasters (the ones that player already visited)
+#        Default: 1
+#
+
+Flightmaster.Whistle.OnlyKnown = 1

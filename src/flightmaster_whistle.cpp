@@ -19,6 +19,7 @@ FlightmasterWhistle::FlightmasterWhistle()
     preserveZone = true;
     linkMainCities = false;
     minPlayerLevel = 1;
+    onlyKnown = true;
 
     CreateLinkedZones();
 }
@@ -167,6 +168,32 @@ bool FlightmasterWhistle::HandleTeleport(Player* player) const
     return true;
 }
 
+bool FlightmasterWhistle::IsValidFlightmaster(const Player* player, const Creature* creature) const
+{
+    if (creature == nullptr)
+        return false;
+
+    if (creature->IsHostileTo(player))
+        return false;
+
+    if (!creature->HasNpcFlag(UNIT_NPC_FLAG_FLIGHTMASTER))
+        return false;
+
+    if (!player->CanSeeOrDetect(creature))
+        return false;
+
+    if (onlyKnown)
+    {
+        uint32 nearest = sObjectMgr->GetNearestTaxiNode(creature->GetPositionX(), creature->GetPositionY(), creature->GetPositionZ(), creature->GetMapId(), player->GetTeamId());
+        if (!nearest)
+            return false;
+
+        return player->m_taxi.IsTaximaskNodeKnown(nearest);
+    }
+
+    return true;
+}
+
 const FlightmasterWhistle::CreatureSpawnInfo* FlightmasterWhistle::ChooseNearestSpawnInfo(const Player* player) const
 {
     Map* map = player->GetMap();
@@ -192,7 +219,7 @@ const FlightmasterWhistle::CreatureSpawnInfo* FlightmasterWhistle::ChooseNearest
                 if (dist < minDist)
                 {
                     Creature* creature = ObjectAccessor::GetSpawnedCreatureByDBGUID(map->GetId(), current->guid);
-                    if (creature != nullptr && creature->GetReactionTo(player) > REP_UNFRIENDLY && player->CanSeeOrDetect(creature))
+                    if (IsValidFlightmaster(player, creature))
                     {
                         minDist = dist;
                         nearest = current;
@@ -301,4 +328,14 @@ void FlightmasterWhistle::SetMinPlayerLevel(int32 level)
 uint8 FlightmasterWhistle::GetMinPlayerLevel() const
 {
     return minPlayerLevel;
+}
+
+void FlightmasterWhistle::SetOnlyKnown(bool onlyKnown)
+{
+    this->onlyKnown = onlyKnown;
+}
+
+bool FlightmasterWhistle::GetOnlyKnown() const
+{
+    return onlyKnown;
 }
