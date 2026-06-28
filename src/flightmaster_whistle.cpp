@@ -41,7 +41,7 @@ void FlightmasterWhistle::LoadFlightmasters()
     uint32 oldMSTime = getMSTime();
 
     QueryResult result = WorldDatabase.Query("select c.guid, c.map, c.position_x, c.position_y, c.position_z, c.orientation from creature_template ct "
-        "inner join creature c on ct.entry = c.id1 "
+        "inner join creature c on ct.entry = c.id "
         "where ct.npcflag & 8192 = 8192");
     if (!result)
     {
