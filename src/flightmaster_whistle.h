@@ -23,6 +23,8 @@ public:
 public:
 	static FlightmasterWhistle* instance();
 
+    static constexpr uint32 WHISTLE_ITEM_ID = 70000;
+
 	void LoadFlightmasters();
 	void TeleportToNearestFlightmaster(Player* player) const;
 
@@ -38,6 +40,10 @@ public:
     uint8 GetMinPlayerLevel() const;
     void SetOnlyKnown(bool onlyKnown);
     bool GetOnlyKnown() const;
+    void SetAddWhistleOnLogin(bool addWhistleOnLogin);
+    bool GetAddWhistleOnLogin() const;
+
+    bool IsBot(Player* player) const;
 private:
 	CreatureSpawnInfoContainer flightmasters;
 	bool enabled;
@@ -47,6 +53,7 @@ private:
     bool linkMainCities;
     uint8 minPlayerLevel;
     bool onlyKnown;
+    bool addWhistleOnLogin;
 
     static std::unordered_map<uint32, uint32> timerMap;
 

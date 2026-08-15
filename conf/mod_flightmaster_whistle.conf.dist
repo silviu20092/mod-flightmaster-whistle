@@ -59,3 +59,11 @@ Flightmaster.Whistle.MinPlayerLevel = 1
 #
 
 Flightmaster.Whistle.OnlyKnown = 1
+
+#
+#    Flightmaster.Whistle.AddWhistleOnLogin
+#        Description: Adds the flightmaster whistle item (if not already in inventory) for players
+#        Default: 1 - automatically adds the item in player's inventory
+#
+
+Flightmaster.Whistle.AddWhistleOnLogin = 1

@@ -25,6 +25,7 @@ public:
         sFlightmasterWhistle->SetLinkMainCities(sConfigMgr->GetOption<bool>("Flightmaster.Whistle.LinkMainCities", false));
         sFlightmasterWhistle->SetMinPlayerLevel(sConfigMgr->GetOption<int32>("Flightmaster.Whistle.MinPlayerLevel", 1));
         sFlightmasterWhistle->SetOnlyKnown(sConfigMgr->GetOption<bool>("Flightmaster.Whistle.OnlyKnown", true));
+        sFlightmasterWhistle->SetAddWhistleOnLogin(sConfigMgr->GetOption<bool>("Flightmaster.Whistle.AddWhistleOnLogin", true));
     }
 
     void OnBeforeWorldInitialized() override

@@ -12,6 +12,10 @@
 #include "CellImpl.h"
 #include "flightmaster_whistle.h"
 
+#ifdef MOD_PLAYERBOTS
+#include "Playerbots.h"
+#endif
+
 FlightmasterWhistle::FlightmasterWhistle()
 {
     enabled = true;
@@ -338,4 +342,24 @@ void FlightmasterWhistle::SetOnlyKnown(bool onlyKnown)
 bool FlightmasterWhistle::GetOnlyKnown() const
 {
     return onlyKnown;
+}
+
+void FlightmasterWhistle::SetAddWhistleOnLogin(bool addWhistleOnLogin)
+{
+    this->addWhistleOnLogin = addWhistleOnLogin;
+}
+
+bool FlightmasterWhistle::GetAddWhistleOnLogin() const
+{
+    return addWhistleOnLogin;
+}
+
+bool FlightmasterWhistle::IsBot(Player* player) const
+{
+#ifndef MOD_PLAYERBOTS
+    return false;
+#else
+    PlayerbotAI* playerAI = GET_PLAYERBOT_AI(player);
+    return playerAI != nullptr && !IsSelfBot(player);
+#endif
 }
