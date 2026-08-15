@@ -26,8 +26,8 @@ public:
         {
             if (!player->HasItemCount(FlightmasterWhistle::WHISTLE_ITEM_ID, 1, true))
             {
-                player->AddItem(FlightmasterWhistle::WHISTLE_ITEM_ID, 1);
-                ChatHandler(player->GetSession()).PSendSysMessage("You have received your Flightmaster Whistle! Use it to teleport to the nearest flightmaster.");
+                if (player->AddItem(FlightmasterWhistle::WHISTLE_ITEM_ID, 1))
+                    ChatHandler(player->GetSession()).PSendSysMessage("You have received your Flightmaster Whistle! Use it to teleport to the nearest flightmaster.");
             }
         }
     }
