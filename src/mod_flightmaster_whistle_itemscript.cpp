@@ -13,7 +13,7 @@ public:
     bool OnUse(Player* player, Item* /*item*/, SpellCastTargets const& /*targets*/) override
     {
         sFlightmasterWhistle->TeleportToNearestFlightmaster(player);
-        return true;
+        return false;
     }
 };
 

@@ -19,5 +19,9 @@ Adds the possibility for players to teleport to nearest flight master in their a
 
 Use command **.fmw** or use the item (**.additem 70000**). Check the **mod_flightmaster_whistle.conf.dist** config for the mod options.
 
+## Client patch (OPTIONAL)
+
+Since Flightmaster Whistle is a custom item, you need a client patch if you want it displayed properly. The item works fine without the patch, however the icon will be a question mark instead of the proper one and you also can't drag it onto action bars. Simply copy **Patch-Z.MPQ** from **client_patch** into your **WOW_INSTALL_DIR/Data** folder. Delete **WOW_INSTALL_DIR/Cache** folder and enjoy.
+
 ## Credits
 - silviu20092
